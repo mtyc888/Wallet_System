@@ -7,8 +7,15 @@ use App\Models\Wallet;
 use Illuminate\Support\Facades\DB;
 use App\Enums\TransactionType;
 use App\Jobs\CalculateRebate;
+use Illuminate\Http\JsonResponse;
 class Wallet_Controller extends Controller
 {
+    /**
+     *  Deposit funds into a wallet and dispatch a 1% rebate calculation job.
+     *  @param Wallet $wallet
+     *  @param Request $request
+     *  @return JsonResponse
+     */
     public function deposit(Wallet $wallet, Request $request){
         $validated = $request->validate([
             'amount' => 'required|numeric|min:0.01'
@@ -26,9 +33,16 @@ class Wallet_Controller extends Controller
             CalculateRebate::dispatch($wallet, $validated['amount'])->afterCommit();
         });
         return response()->json([
-            'message' => 'deposit successful.'
+            'message' => 'deposit successful.',
+            'wallet_id' => $wallet->id
         ], 201);
     }
+    /**
+     *  Withdraw funds from a wallet and making sure that it does not get overdrawn.
+     *  @param Wallet $wallet
+     *  @param Request $request
+     *  @return JsonResponse
+     */
     public function withdrawal(Wallet $wallet, Request $request){
         $validated = $request->validate([
             'amount' => 'required|numeric|min:0.01'
@@ -56,12 +70,22 @@ class Wallet_Controller extends Controller
             ], 422);
         }
     }
+    /**
+     *  Get the balance from a wallet
+     *  @param Wallet $wallet
+     *  @return JsonResponse 
+     */
     public function getBalance(Wallet $wallet){
         return response()->json([
             'wallet_id' => $wallet->id,
             'balance' => $wallet->balance
         ]);
     }
+    /**
+     *  Get the paginated transactions from a wallet
+     *  @param Wallet $wallet
+     *  @return JsonResponse 
+     */
     public function getTransactions(Wallet $wallet){
         return response()->json([
             'wallet_id' => $wallet->id,
