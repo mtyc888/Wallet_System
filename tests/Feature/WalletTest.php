@@ -32,7 +32,7 @@ class WalletTest extends TestCase
         ]);
     }
     /**
-     *  Test concurrent deposits to verify correct balance updates and rebate calculations. 
+     *  Test concurrent deposits to verify correct balance updates and rebate calculations.
      */
     public function test_deposit_with_rebate_concurrent():void{
         $wallet = Wallet::factory()->create(['balance'=>0]);
@@ -56,7 +56,7 @@ class WalletTest extends TestCase
     }
     /**
      *  Test that a withdrawal correctly deducts from the wallet balance
-     *  and creates a withdrawal transaction record. (extra)
+     *  and creates a withdrawal transaction record.
      **/
     public function test_withdrawal():void{
         $wallet = Wallet::factory()->create([
@@ -75,7 +75,7 @@ class WalletTest extends TestCase
     }
     /**
      *  Test that a withdrawal exceeding the wallet balance is rejected,
-     *  and the balance remains unchanged. (extra)
+     *  and the balance remains unchanged.
      */
     public function test_withdrawal_limit():void{
         $wallet = Wallet::factory()->create([
@@ -94,7 +94,7 @@ class WalletTest extends TestCase
     }
     /**
      *  Test that concurrent withdrawals cannot overdraw the wallet,
-     *  and the final balance is never negative. (extra)
+     *  and the final balance is never negative.
      */
     public function test_withdrawal_concurrent():void{
         $wallet = Wallet::factory()->create([
