@@ -64,7 +64,7 @@ Option C: Serve directly
 ```bash
 php -S 127.0.0.1:8000 -t public
 ```
-
+Access the app at `http://127.0.0.1:8000`
 ## API Endpoints
 
 ### Deposit
