@@ -73,7 +73,7 @@ class Wallet_Controller extends Controller
     /**
      *  Get the balance from a wallet
      *  @param Wallet $wallet
-     *  @return JsonResponse 
+     *  @return JsonResponse
      */
     public function getBalance(Wallet $wallet){
         return response()->json([
@@ -84,12 +84,12 @@ class Wallet_Controller extends Controller
     /**
      *  Get the paginated transactions from a wallet
      *  @param Wallet $wallet
-     *  @return JsonResponse 
+     *  @return JsonResponse
      */
     public function getTransactions(Wallet $wallet){
         return response()->json([
             'wallet_id' => $wallet->id,
-            'transactions' => $wallet->transactions()->latest()->pagination(15)
+            'transactions' => $wallet->transactions()->latest()->paginate(15)
         ]);
     }
 }
