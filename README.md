@@ -59,7 +59,11 @@ herd link
 ```
 Access the app at `http://laravel-wallet.test`
 
-Option C: php -S 127.0.0.1:8000 -t public
+Option C: Serve directly
+
+```bash
+php -S 127.0.0.1:8000 -t public
+```
 
 ## API Endpoints
 
