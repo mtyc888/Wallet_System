@@ -30,11 +30,11 @@ This is a wallet management system that supports concurrent deposit and withdraw
 
 4. Update `.env` with your database credentials
 
-DB_CONNECTION=mysql
-DB_DATABASE=wallet_system
-DB_USERNAME=root
-DB_PASSWORD=your_password
-QUEUE_CONNECTION=database
+- DB_CONNECTION=mysql
+- DB_DATABASE=wallet_system
+- DB_USERNAME=root
+- DB_PASSWORD=your_password
+- QUEUE_CONNECTION=database
 
 5. Run migrations
 ```bash
