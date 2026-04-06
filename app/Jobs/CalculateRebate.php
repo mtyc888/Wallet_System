@@ -6,6 +6,7 @@ use App\Enums\TransactionType;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\Wallet;
+use Illuminate\Support\Facades\DB;
 class CalculateRebate implements ShouldQueue
 {
     use Queueable;
@@ -22,11 +23,12 @@ class CalculateRebate implements ShouldQueue
     public function handle(): void
     {
         $rebate = $this->depositAmount * 0.01;
-        $this->wallet->increment('balance', $rebate);
-
-        $this->wallet->transactions()->create([
-            'type' => TransactionType::REBATE,
-            'amount' => $rebate,
-        ]);
+        DB::transaction(function() use ($rebate){
+            $this->wallet->increment('balance', $rebate);
+            $this->wallet->transactions()->create([
+                'type' => TransactionType::REBATE,
+                'amount' => $rebate,
+            ]);
+        });
     }
 }
