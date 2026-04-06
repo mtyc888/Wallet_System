@@ -124,3 +124,5 @@ The rebate calculation job is dispatched with `afterCommit()` to ensure the job 
 - cd Laravel_Wallet
 
 - php artisan test --filter=WalletTest
+
+Author: Marvin Tan 
