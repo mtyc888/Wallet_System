@@ -100,9 +100,16 @@ Access the app at `http://127.0.0.1:8000`
 I used pessimistic locking (`lockForUpdate()`) inside a database transaction to prevent race conditions. When a request locks a wallet row, any other request trying to update the same wallet must wait until the first transaction completes. This guarantees that balance updates are processed one at a time.
 
 ```php
-DB::transaction(function () use ($wallet, $validated) {
+DB::transaction(function () use ($wallet, $validated){
     $wallet = Wallet::lockForUpdate()->find($wallet->id);
+
     $wallet->increment('balance', $validated['amount']);
+
+    $wallet->transactions()->create([
+        'type' => TransactionType::DEPOSIT,
+        'amount' => $validated['amount']
+    ]);
+    CalculateRebate::dispatch($wallet, $validated['amount'])->afterCommit();
 });
 ```
 

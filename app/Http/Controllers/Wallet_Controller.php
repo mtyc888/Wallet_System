@@ -21,7 +21,7 @@ class Wallet_Controller extends Controller
             'amount' => 'required|numeric|min:0.01'
         ]);
         DB::transaction(function () use ($wallet, $validated){
-            // we should lockForUpdate and use atomic operations for race condition mitigation
+            // using lockForUpdate for race condition mitigation
             $wallet = Wallet::lockForUpdate()->find($wallet->id);
 
             $wallet->increment('balance', $validated['amount']);
@@ -48,6 +48,7 @@ class Wallet_Controller extends Controller
             'amount' => 'required|numeric|min:0.01'
         ]);
         $success = DB::transaction(function() use ($wallet, $validated){
+            // using lockForUpdate for race condition mitigation
             $wallet = Wallet::lockForUpdate()->find($wallet->id);
             if($wallet->balance >= $validated['amount']){
                 $wallet->decrement('balance', $validated['amount']);
