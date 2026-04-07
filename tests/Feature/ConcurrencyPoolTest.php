@@ -39,6 +39,7 @@ class ConcurrencyPoolTest extends TestCase
         $this->assertTrue($wallet->balance >= 0);
         $this->assertEquals(0, $wallet->balance);
         $this->assertEquals(10, $wallet->transactions()->where('type', TransactionType::WITHDRAWAL)->count());
+        $wallet->transactions()->delete();
     }
     /**
      *  Test concurrent deposits to verify correct balance updates and rebate calculations.
@@ -70,5 +71,6 @@ class ConcurrencyPoolTest extends TestCase
         $this->assertEquals($expectedBalance, $wallet->balance);
         $this->assertEquals($concurrentRequests, $wallet->transactions()->where('type', TransactionType::DEPOSIT)->count());
         $this->assertEquals($concurrentRequests, $wallet->transactions()->where('type', TransactionType::REBATE)->count());
+        $wallet->transactions()->delete();
     }
 }
