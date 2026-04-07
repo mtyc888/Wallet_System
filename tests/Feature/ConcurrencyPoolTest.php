@@ -16,7 +16,7 @@ class ConcurrencyPoolTest extends TestCase
     public function test_withdrawal_concurrent_with_pool(): void
     {
         // Create a wallet on php artisan tinker then use that specific wallet's id
-        $walletId = 99;
+        $walletId = 1;
         $withdrawalAmount = 10;
         $concurrentRequests = 100;
 
@@ -46,7 +46,7 @@ class ConcurrencyPoolTest extends TestCase
     public function test_deposit_concurrent_with_pool(): void
     {
         // Create a wallet on php artisan tinker then use that specific wallet's id
-        $walletId = 99;
+        $walletId = 1;
         $depositAmount = 100;
         $concurrentRequests = 100;
 

@@ -138,6 +138,38 @@ php artisan serve or php -S 127.0.0.1:8000 -t public
 php artisan queue:work
 ```
 
+- You can pick a wallet that you already have from your database and replace it's id in the test function here:
+
+```php
+    public function test_withdrawal_concurrent_with_pool(): void
+    {
+        $walletId = 1; // <- replace this id with your existing wallet's ID 
+        $withdrawalAmount = 10;
+        $concurrentRequests = 100;
+        ...
+```
+
+- Or you can create a new wallet for this test using "php artisan tinker" then set the $walletId in the tests from "ConcurrencyPoolTest" to the wallet you just created.
+
+```bash
+php artisan tinker
+Psy Shell v0.12.22 (PHP 8.3.13 — cli) by Justin Hileman
+New PHP manual is available (latest: 3.0.5). Update with `doc --update-manual`
+
+> Wallet::factory()->create(['id'=>99, 'balance'=>0]);
+
+[!] Aliasing 'Wallet' to 'App\Models\Wallet' for this Tinker session.
+= App\Models\Wallet {#7501
+    user_id: 3,
+    balance: 0,
+    id: 99,
+    updated_at: "2026-04-07 03:08:14",
+    created_at: "2026-04-07 03:08:14",
+  }
+
+>
+```
+
 3. Run the concurrency tests
 ```bash
 php artisan test --filter=ConcurrencyPoolTest
