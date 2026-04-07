@@ -119,10 +119,28 @@ DB::transaction(function () use ($wallet, $validated){
 ### Rebate Job Timing
 The rebate calculation job is dispatched with `afterCommit()` to ensure the job only runs after the deposit transaction has been fully committed to the database. Without this, the job could execute before the deposit is persisted, leading to incorrect rebate calculations.
  
-## Running tests
+### Unit Tests (sequential)
+Validates correctness of deposit, withdrawal, rebate calculations, and overdraw prevention.
+```bash
+php artisan test --filter=WalletTest
+```
 
-- cd Laravel_Wallet
+### Concurrency Tests (parallel via Http::pool)
+Validates that `lockForUpdate()` correctly handles simultaneous requests. Requires a running server and queue worker.
 
-- php artisan test --filter=WalletTest
+1. Start the server
+```bash
+php artisan serve or php -S 127.0.0.1:8000 -t public
+```
+
+2. Start the queue worker (in a separate terminal)
+```bash
+php artisan queue:work
+```
+
+3. Run the concurrency tests
+```bash
+php artisan test --filter=ConcurrencyPoolTest
+```
 
 Author: Marvin Tan 

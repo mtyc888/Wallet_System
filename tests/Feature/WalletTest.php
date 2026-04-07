@@ -32,29 +32,6 @@ class WalletTest extends TestCase
         ]);
     }
     /**
-     *  Test concurrent deposits to verify correct balance updates and rebate calculations.
-     */
-    public function test_deposit_with_rebate_concurrent():void{
-        $wallet = Wallet::factory()->create(['balance'=>0]);
-        $depositCount = 1000;
-        $depositAmount = 2000;
-
-        for($i = 0; $i < $depositCount; $i++){
-            $response = $this->post('/api/wallets/'. $wallet->id .'/deposit', [
-                'amount' => $depositAmount
-            ]);
-            $response->assertStatus(201);
-        }
-        $wallet->refresh();
-
-        $expectedBalance = ($depositAmount * $depositCount) + ($depositAmount * 0.01 * $depositCount);
-        $this->assertEquals($expectedBalance, $wallet->balance);
-
-        //verify correct number of transactions
-        $this->assertEquals($depositCount, $wallet->transactions()->where('type', TransactionType::DEPOSIT)->count());
-        $this->assertEquals($depositCount, $wallet->transactions()->where('type', TransactionType::REBATE)->count());
-    }
-    /**
      *  Test that a withdrawal correctly deducts from the wallet balance
      *  and creates a withdrawal transaction record.
      **/
@@ -91,26 +68,5 @@ class WalletTest extends TestCase
             'type' => TransactionType::WITHDRAWAL,
             'amount' => 1200
         ]);
-    }
-    /**
-     *  Test that concurrent withdrawals cannot overdraw the wallet,
-     *  and the final balance is never negative.
-     */
-    public function test_withdrawal_concurrent():void{
-        $wallet = Wallet::factory()->create([
-            'balance' => 1000
-        ]);
-        $withdrawalCount = 200;
-        $withdrawalAmount = 10;
-        for($i=0; $i<$withdrawalCount; $i++){
-            $this->post('/api/wallets/'.$wallet->id.'/withdraw', [
-                'amount' => $withdrawalAmount
-            ]);
-        }
-        $wallet->refresh();
-
-        $this->assertEquals(0, $wallet->balance);
-        $this->assertTrue($wallet->balance >= 0);
-        $this->assertEquals(100, $wallet->transactions()->where('type', TransactionType::WITHDRAWAL)->count());
     }
 }
